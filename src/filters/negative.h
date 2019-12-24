@@ -22,7 +22,7 @@
 
 class dFilterNegative : public QObject, dFilterInterface
 {
-    Q_OBJECT
+	Q_OBJECT
 	Q_PLUGIN_METADATA( IID dFilterInterface_iid )
 	Q_INTERFACES(dFilterInterface)
 

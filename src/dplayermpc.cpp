@@ -75,7 +75,7 @@ void dPlayerMpc::directoryChanged( const QString &dir )
 		QString filename = dir + "/" + delta21.first();
 		int *size = new int;
 		*size = -1;
-        
+
 		// It's ugly code, but what can I do?
 		connect( timer, &QTimer::timeout, [=]()
 			{

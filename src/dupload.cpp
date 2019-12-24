@@ -566,10 +566,10 @@ bool dUpload::nativeEventFilter( const QByteArray &eventType, void *event, long 
 
 			return enableMP;
 		}
-    }
+	}
 #endif
 
-    return false;
+	return false;
 }
 
 bool dUpload::event( QEvent *event )

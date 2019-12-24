@@ -18,13 +18,13 @@
 #include <QDebug>
 
 #ifdef Q_WS_X11
-    #include <X11/Xlib.h>
-    #include <xcb/xcb.h>
+	#include <X11/Xlib.h>
+	#include <xcb/xcb.h>
 #endif
 
 dGlobalHotKey::dGlobalHotKey()
 {
-    QAbstractEventDispatcher::instance()->installNativeEventFilter( this );
+	QAbstractEventDispatcher::instance()->installNativeEventFilter( this );
 }
 
 dGlobalHotKey::~dGlobalHotKey()
@@ -61,10 +61,10 @@ static bool qxt_mac_handler_installed = false;
 
 OSStatus qxt_mac_handle_hot_key( EventHandlerCallRef /* nextHandler */, EventRef event, void *data )
 {
-    Q_UNUSED( data );
-    QAbstractEventDispatcher::instance()->filterEvent( ( void * ) event );
+	Q_UNUSED( data );
+	QAbstractEventDispatcher::instance()->filterEvent( ( void * ) event );
 
-    return noErr;
+	return noErr;
 }
 
 #endif
@@ -77,28 +77,28 @@ bool dGlobalHotKey::nativeEventFilter( const QByteArray &eventType, void *e, lon
 		if ( m->message == WM_HOTKEY )
 			dGlobalHotKey::instance()->hotKeyPressed( id( HIWORD( m->lParam ), LOWORD( m->lParam ) ) );
 	#elif defined( Q_WS_X11 )
-        xcb_key_press_event_t *kev = 0;
-        if (eventType == "xcb_generic_event_t") {
-            xcb_generic_event_t *ev = static_cast<xcb_generic_event_t *>(e);
-            if ((ev->response_type & 127) == XCB_KEY_PRESS) {
-                kev = static_cast<xcb_key_press_event_t *>(e);
-            }
-        }
+		xcb_key_press_event_t *kev = 0;
+		if (eventType == "xcb_generic_event_t") {
+			xcb_generic_event_t *ev = static_cast<xcb_generic_event_t *>(e);
+			if ((ev->response_type & 127) == XCB_KEY_PRESS) {
+				kev = static_cast<xcb_key_press_event_t *>(e);
+			}
+		}
 
-        if (kev != 0) {
-            unsigned int keycode = kev->detail;
-            unsigned int keystate = 0;
-            if(kev->state & XCB_MOD_MASK_1)
-                keystate |= Mod1Mask;
-            if(kev->state & XCB_MOD_MASK_CONTROL)
-                keystate |= ControlMask;
-            if(kev->state & XCB_MOD_MASK_4)
-                keystate |= Mod4Mask;
-            if(kev->state & XCB_MOD_MASK_SHIFT)
-                keystate |= ShiftMask;
+		if (kev != 0) {
+			unsigned int keycode = kev->detail;
+			unsigned int keystate = 0;
+			if(kev->state & XCB_MOD_MASK_1)
+				keystate |= Mod1Mask;
+			if(kev->state & XCB_MOD_MASK_CONTROL)
+				keystate |= ControlMask;
+			if(kev->state & XCB_MOD_MASK_4)
+				keystate |= Mod4Mask;
+			if(kev->state & XCB_MOD_MASK_SHIFT)
+				keystate |= ShiftMask;
 
-            dGlobalHotKey::instance()->hotKeyPressed( id( keycode, ( keystate & ( ShiftMask | ControlMask | Mod1Mask | Mod4Mask ) ) ) );
-        }
+			dGlobalHotKey::instance()->hotKeyPressed( id( keycode, ( keystate & ( ShiftMask | ControlMask | Mod1Mask | Mod4Mask ) ) ) );
+		}
 	#elif defined( Q_WS_MAC )
 		EventRef event = ( EventRef ) e;
 		if ( GetEventClass( event ) == kEventClassKeyboard && GetEventKind( event ) == kEventHotKeyPressed )
@@ -490,9 +490,9 @@ quint32 dGlobalHotKey::nativeKeycode( Qt::Key k )
 		ch = k;
 
 #ifdef QT_MAC_USE_COCOA
-        TISInputSourceRef layout = TISCopyCurrentKeyboardLayoutInputSource();
-        if ( !layout )
-            return 0;
+		TISInputSourceRef layout = TISCopyCurrentKeyboardLayoutInputSource();
+		if ( !layout )
+			return 0;
 
 		CFDataRef data = static_cast< CFDataRef >( TISGetInputSourceProperty( layout, kTISPropertyUnicodeKeyLayoutData ) );
 		const UCKeyboardLayout *ucData = data ? reinterpret_cast< const UCKeyboardLayout * >( CFDataGetBytePtr( data ) ) : 0;
