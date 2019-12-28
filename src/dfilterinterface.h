@@ -31,7 +31,7 @@ public:
 
 #define dFilterInterface_iid "org.deltaz.dUpload.dFilterInterface/1.0"
 
-Q_DECLARE_INTERFACE( dFilterInterface, "org.deltaz.dUpload.dFilterInterface/1.0" )
+Q_DECLARE_INTERFACE( dFilterInterface, dFilterInterface_iid )
 
 Q_DECLARE_METATYPE( dFilterInterface * )
 
