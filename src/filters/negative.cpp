@@ -1,7 +1,7 @@
 /****************************************************************************
  *  dUpload
  *
- *  Copyright (c) 2018 by Bogomolov Danila
+ *  Copyright (c) 2018-2019 by Bogomolov Danila
  *
  ***************************************************************************
  *                                                                         *
@@ -20,16 +20,18 @@ QString dFilterNegative::name() const
 	return "Negative";
 }
 
-QPixmap dFilterNegative::applyFilter(const QPixmap &pixmap) const
+QPixmap dFilterNegative::applyFilter( const QPixmap &pixmap ) const
 {
 	QImage image = pixmap.toImage();
-	for (int i = 0; i < image.height(); i++) {
-		uchar *scan = image.scanLine(i);
+	for ( int i = 0; i < image.height(); i++ )
+	{
+		uchar *scan = image.scanLine( i );
 		int depth = 4;
-		for (int j = 0; j < image.width(); j++) {
-			QRgb *rgbpixel = reinterpret_cast<QRgb*>(scan + j * depth);
-			*rgbpixel = QColor(255 - qRed(*rgbpixel), 255 - qGreen(*rgbpixel), 255 - qBlue(*rgbpixel)).rgba();
+		for ( int j = 0; j < image.width(); j++ )
+		{
+			QRgb *rgbpixel = reinterpret_cast<QRgb*>( scan + j * depth );
+			*rgbpixel = QColor( 255 - qRed( *rgbpixel ), 255 - qGreen( *rgbpixel ), 255 - qBlue( *rgbpixel ) ).rgba();
 		}
 	}
-	return QPixmap::fromImage(image);
+	return QPixmap::fromImage( image );
 }

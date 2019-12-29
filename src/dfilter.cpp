@@ -35,7 +35,9 @@ dFilter::dFilter( dUpload *d ) : m_dupload( d )
 	QPixmap pixmap = QPixmap::fromImage( QApplication::clipboard()->image() );
 
 	if ( pixmap.isNull() && QApplication::clipboard()->mimeData()->hasUrls() )
+	{
 		pixmap.load( QApplication::clipboard()->mimeData()->urls()[0].toLocalFile() );
+	}
 
 	if ( pixmap.isNull() )
 	{
@@ -50,14 +52,14 @@ dFilter::dFilter( dUpload *d ) : m_dupload( d )
 
 	m_original = pixmap;
 	m_current = m_original;
-	ui.image->setPixmap(m_current.scaled(ui.image->width(), ui.image->height(), Qt::KeepAspectRatio));
+	ui.image->setPixmap( m_current.scaled( ui.image->width(), ui.image->height(), Qt::KeepAspectRatio ) );
 
-	ui.filterList->setIconSize(QSize(200, 200));
-	ui.filterList->setViewMode(QListView::IconMode);
+	ui.filterList->setIconSize( QSize( 200, 200 ) );
+	ui.filterList->setViewMode( QListView::IconMode );
 
 	loadFilters();
 
-	connect(ui.filterList, &QListWidget::currentItemChanged, this, &dFilter::filterActivated);
+	connect( ui.filterList, &QListWidget::currentItemChanged, this, &dFilter::filterActivated );
 	
 	QPoint window_pos = dDesktopManager::instance()->getScreenCoord( dDesktopManager::instance()->getPrimaryScreen() );
 	move( window_pos );
@@ -83,41 +85,45 @@ dFilter::~dFilter()
 {
 }
 
-void dFilter::resizeEvent(QResizeEvent *)
+void dFilter::resizeEvent( QResizeEvent * )
 {
-	ui.image->setPixmap(m_current.scaled(ui.image->width(), ui.image->height(), Qt::KeepAspectRatio));
+	ui.image->setPixmap( m_current.scaled( ui.image->width(), ui.image->height(), Qt::KeepAspectRatio ) );
 }
 
 void dFilter::loadFilters()
 {
-	filters_dir = QDir(qApp->applicationDirPath());
-	filters_dir.cd("filters");
+	filters_dir = QDir( qApp->applicationDirPath() );
+	filters_dir.cd( "filters" );
 
-	const auto filters_list = filters_dir.entryList(QDir::Files);
+	const auto filters_list = filters_dir.entryList( QDir::Files );
 
-	for (const QString &file_name : filters_list) {
-		if ( !QLibrary::isLibrary(file_name) )
-			{ continue; }
-		QPluginLoader loader(filters_dir.absoluteFilePath(file_name));
-		auto filter = qobject_cast<dFilterInterface *>(loader.instance());
-		if (filter) {
-			QListWidgetItem *item = new QListWidgetItem(filter->applyFilter(m_original), filter->name());
-			item->setSizeHint(QSize(240, 150));
-			item->setTextAlignment(Qt::AlignCenter);
-			item->setData(Qt::UserRole, QVariant::fromValue(filter));
-			ui.filterList->addItem(item);
+	for ( const QString &file_name : filters_list )
+	{
+		if ( !QLibrary::isLibrary( file_name ) )
+		{
+			continue;
+		}
+		QPluginLoader loader( filters_dir.absoluteFilePath( file_name ) );
+		auto filter = qobject_cast<dFilterInterface *>( loader.instance() );
+		if ( filter )
+		{
+			QListWidgetItem *item = new QListWidgetItem( filter->applyFilter( m_original ), filter->name() );
+			item->setSizeHint( QSize( 240, 150 ) );
+			item->setTextAlignment( Qt::AlignCenter );
+			item->setData( Qt::UserRole, QVariant::fromValue( filter ) );
+			ui.filterList->addItem( item );
 		}
 	}
 }
 
-void dFilter::filterActivated(QListWidgetItem *current, QListWidgetItem *)
+void dFilter::filterActivated( QListWidgetItem *current, QListWidgetItem * )
 {
-	auto filter = current->data(Qt::UserRole).value<dFilterInterface *>();
-	m_current = filter->applyFilter(m_original);
-	ui.image->setPixmap(m_current.scaled(ui.image->width(), ui.image->height(), Qt::KeepAspectRatio));
+	auto filter = current->data( Qt::UserRole ).value<dFilterInterface *>();
+	m_current = filter->applyFilter( m_original );
+	ui.image->setPixmap( m_current.scaled( ui.image->width(), ui.image->height(), Qt::KeepAspectRatio ) );
 }
 
-void dFilter::keyPressEvent(QKeyEvent *event)
+void dFilter::keyPressEvent( QKeyEvent *event )
 {
 #if defined( Q_WS_WIN ) || defined( Q_WS_MAC )
 	quint32 key = event->nativeVirtualKey();
@@ -125,22 +131,31 @@ void dFilter::keyPressEvent(QKeyEvent *event)
 	quint32 key = event->nativeScanCode();
 #endif
 
-	if (key == m_dupload->nativeKeycode('B')) {
-		QApplication::clipboard()->setImage(m_current.toImage());
+	if ( key == m_dupload->nativeKeycode( 'B' ) )
+	{
+		QApplication::clipboard()->setImage( m_current.toImage() );
 		m_dupload->sendFromClipboard();
 		close();
-	} else if (key == m_dupload->nativeKeycode('N')) {
-		QApplication::clipboard()->setImage(m_current.toImage());
+	}
+	else if ( key == m_dupload->nativeKeycode( 'N' ) )
+	{
+		QApplication::clipboard()->setImage( m_current.toImage() );
 		m_dupload->sendFromClipboard(1);
 		close();
-	} else if (key == m_dupload->nativeKeycode('A')) {
-		QApplication::clipboard()->setImage(m_current.toImage());
+	}
+	else if ( key == m_dupload->nativeKeycode( 'A' ) )
+	{
+		QApplication::clipboard()->setImage( m_current.toImage() );
 		m_dupload->sendFromClipboard(2);
 		close();
-	} else if (key == m_dupload->nativeKeycode('C')) {
-		QApplication::clipboard()->setImage(m_current.toImage());
+	}
+	else if ( key == m_dupload->nativeKeycode( 'C' ) )
+	{
+		QApplication::clipboard()->setImage( m_current.toImage() );
 		close();
-	} else if (event->key() == Qt::Key_Escape) {
+	}
+	else if ( event->key() == Qt::Key_Escape )
+	{
 		close();
 	}
 }

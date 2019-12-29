@@ -2,7 +2,7 @@
  *  dUpload
  *
  *  Copyright (c) 2015 by Belov Nikita <null@deltaz.org>
- *                2018 by Bogomolov Danila
+ *                2018-2019 by Bogomolov Danila
  *
  ***************************************************************************
  *                                                                         *
@@ -21,17 +21,19 @@ QString dFilterMonochrome::name() const
 	return "Monochrome";
 }
 
-QPixmap dFilterMonochrome::applyFilter(const QPixmap &pixmap) const
+QPixmap dFilterMonochrome::applyFilter( const QPixmap &pixmap ) const
 {
 	QImage image = pixmap.toImage();
-	for (int i = 0; i < image.height(); i++) {
-		uchar *scan = image.scanLine(i);
+	for ( int i = 0; i < image.height(); i++ )
+	{
+		uchar *scan = image.scanLine( i );
 		int depth = 4;
-		for (int j = 0; j < image.width(); j++) {
-			QRgb *rgbpixel = reinterpret_cast<QRgb*>(scan + j * depth);
-			int gray = qGray(*rgbpixel);
-			*rgbpixel = QColor(gray, gray, gray).rgba();
+		for ( int j = 0; j < image.width(); j++ )
+		{
+			QRgb *rgbpixel = reinterpret_cast<QRgb*>( scan + j * depth );
+			int gray = qGray( *rgbpixel );
+			*rgbpixel = QColor( gray, gray, gray ).rgba();
 		}
 	}
-	return QPixmap::fromImage(image);
+	return QPixmap::fromImage( image );
 }

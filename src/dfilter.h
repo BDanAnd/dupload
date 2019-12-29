@@ -28,16 +28,16 @@ class dFilter : public QWidget
 	Q_OBJECT
 
 public:
-	dFilter(dUpload *d);
+	dFilter( dUpload *d );
 	~dFilter();
 
 protected:
-	void keyPressEvent(QKeyEvent *event);
-	void resizeEvent(QResizeEvent *event);
+	void keyPressEvent( QKeyEvent *event );
+	void resizeEvent( QResizeEvent *event );
 
 private:
 	void loadFilters();
-	void filterActivated(QListWidgetItem *current, QListWidgetItem *);
+	void filterActivated( QListWidgetItem *current, QListWidgetItem * );
 
 	Ui::dFilterClass ui;
 	dUpload *m_dupload;

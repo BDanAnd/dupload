@@ -1,7 +1,7 @@
 /****************************************************************************
  *  dUpload
  *
- *  Copyright (c) 2018 by Bogomolov Danila
+ *  Copyright (c) 2018-2019 by Bogomolov Danila
  *
  ***************************************************************************
  *                                                                         *
@@ -24,11 +24,11 @@ class dFilterNegative : public QObject, dFilterInterface
 {
 	Q_OBJECT
 	Q_PLUGIN_METADATA( IID dFilterInterface_iid )
-	Q_INTERFACES(dFilterInterface)
+	Q_INTERFACES( dFilterInterface )
 
 public:
 	QString name() const override;
-	QPixmap applyFilter(const QPixmap &pixmap) const override;
+	QPixmap applyFilter( const QPixmap &pixmap ) const override;
 };
 
 #endif // DFILTERNEGATIVE_H

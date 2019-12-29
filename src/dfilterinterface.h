@@ -26,7 +26,7 @@ public:
 	virtual ~dFilterInterface() {}
 
 	virtual QString name() const = 0;
-	virtual QPixmap applyFilter(const QPixmap &pixmap) const = 0;
+	virtual QPixmap applyFilter( const QPixmap &pixmap ) const = 0;
 };
 
 #define dFilterInterface_iid "org.deltaz.dUpload.dFilterInterface/1.0"

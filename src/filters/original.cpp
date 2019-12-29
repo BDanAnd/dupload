@@ -2,7 +2,7 @@
  *  dUpload
  *
  *  Copyright (c) 2015 by Belov Nikita <null@deltaz.org>
- *                2018 by Bogomolov Danila
+ *                2018-2019 by Bogomolov Danila
  *
  ***************************************************************************
  *                                                                         *
@@ -21,7 +21,7 @@ QString dFilterOriginal::name() const
 	return "Original";
 }
 
-QPixmap dFilterOriginal::applyFilter(const QPixmap &pixmap) const
+QPixmap dFilterOriginal::applyFilter( const QPixmap &pixmap ) const
 {
 	return pixmap;
 }
