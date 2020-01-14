@@ -52,15 +52,17 @@ dFilter::dFilter( dUpload *d ) : m_dupload( d )
 
 	m_original = pixmap;
 	m_current = m_original;
-	ui.image->setPixmap( m_current.scaled( ui.image->width(), ui.image->height(), Qt::KeepAspectRatio ) );
+	ui.image->setPixmap( m_current.scaled( ui.image->width(), ui.image->height(), Qt::KeepAspectRatio, Qt::SmoothTransformation ) );
 
 	ui.filterList->setIconSize( QSize( 200, 200 ) );
 	ui.filterList->setViewMode( QListView::IconMode );
+	ui.settings->addWidget( new QWidget );
 
 	loadFilters();
 
 	connect( ui.filterList, &QListWidget::currentItemChanged, this, &dFilter::filterActivated );
-	
+	//connect( ui.filterList, QOverload<int>::of( &QListWidget::currentRowChanged ), ui.settings, &QStackedWidget::setCurrentIndex );
+
 	QPoint window_pos = dDesktopManager::instance()->getScreenCoord( dDesktopManager::instance()->getPrimaryScreen() );
 	move( window_pos );
 	showMaximized();
@@ -87,7 +89,7 @@ dFilter::~dFilter()
 
 void dFilter::resizeEvent( QResizeEvent * )
 {
-	ui.image->setPixmap( m_current.scaled( ui.image->width(), ui.image->height(), Qt::KeepAspectRatio ) );
+	ui.image->setPixmap( m_current.scaled( ui.image->width(), ui.image->height(), Qt::KeepAspectRatio, Qt::SmoothTransformation ) );
 }
 
 void dFilter::loadFilters()
@@ -107,7 +109,9 @@ void dFilter::loadFilters()
 		auto filter = qobject_cast<dFilterInterface *>( loader.instance() );
 		if ( filter )
 		{
-			QListWidgetItem *item = new QListWidgetItem( filter->applyFilter( m_original ), filter->name() );
+			filter->setPixmap( m_original );
+			ui.settings->addWidget( filter->getWidget() );
+			QListWidgetItem *item = new QListWidgetItem( filter->applyFilter(), filter->name() );
 			item->setSizeHint( QSize( 240, 150 ) );
 			item->setTextAlignment( Qt::AlignCenter );
 			item->setData( Qt::UserRole, QVariant::fromValue( filter ) );
@@ -118,9 +122,10 @@ void dFilter::loadFilters()
 
 void dFilter::filterActivated( QListWidgetItem *current, QListWidgetItem * )
 {
+	ui.settings->setCurrentIndex( ui.filterList->currentRow() + 1 );
 	auto filter = current->data( Qt::UserRole ).value<dFilterInterface *>();
-	m_current = filter->applyFilter( m_original );
-	ui.image->setPixmap( m_current.scaled( ui.image->width(), ui.image->height(), Qt::KeepAspectRatio ) );
+	m_current = filter->applyFilter();
+	ui.image->setPixmap( m_current.scaled( ui.image->width(), ui.image->height(), Qt::KeepAspectRatio, Qt::SmoothTransformation ) );
 }
 
 void dFilter::keyPressEvent( QKeyEvent *event )

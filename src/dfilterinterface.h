@@ -1,7 +1,7 @@
 /****************************************************************************
  *  dUpload
  *
- *  Copyright (c) 2019 by Bogomolov Danila
+ *  Copyright (c) 2019-2020 by Bogomolov Danila
  *
  ***************************************************************************
  *                                                                         *
@@ -26,7 +26,12 @@ public:
 	virtual ~dFilterInterface() {}
 
 	virtual QString name() const = 0;
-	virtual QPixmap applyFilter( const QPixmap &pixmap ) const = 0;
+	virtual void setPixmap( const QPixmap &pixmap ) const = 0;
+	virtual QWidget * getWidget() const = 0;
+	virtual QPixmap applyFilter() const = 0;
+
+protected:
+	mutable const QPixmap *m_original;
 };
 
 #define dFilterInterface_iid "org.deltaz.dUpload.dFilterInterface/1.0"

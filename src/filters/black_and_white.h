@@ -1,7 +1,7 @@
 /****************************************************************************
  *  dUpload
  *
- *  Copyright (c) 2018-2019 by Bogomolov Danila
+ *  Copyright (c) 2020 by Bogomolov Danila
  *
  ***************************************************************************
  *                                                                         *
@@ -13,14 +13,15 @@
  ***************************************************************************
 *****************************************************************************/
 
-#ifndef DFILTERNEGATIVE_H
-#define DFILTERNEGATIVE_H
+#ifndef DFILTERBLACKANDWHITE_H
+#define DFILTERBLACKANDWHITE_H
 
 #include <QObject>
 #include <QtPlugin>
+#include <QSlider>
 #include "dfilterinterface.h"
 
-class dFilterNegative : public QObject, dFilterInterface
+class dFilterBlackAndWhite : public QObject, dFilterInterface
 {
 	Q_OBJECT
 	Q_PLUGIN_METADATA( IID dFilterInterface_iid )
@@ -28,7 +29,13 @@ class dFilterNegative : public QObject, dFilterInterface
 
 public:
 	QString name() const override;
-	QPixmap applyFilter( const QPixmap &pixmap ) const override;
+	void setPixmap( const QPixmap &pixmap ) const override;
+	QPixmap applyFilter() const override;
+	QWidget * getWidget() const override;
+
+private:
+	mutable QSlider *slider;
 };
 
-#endif // DFILTERNEGATIVE_H
+#endif // DFILTERBLACKANDWHITE_H
+

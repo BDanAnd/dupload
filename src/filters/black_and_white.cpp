@@ -1,8 +1,7 @@
 /****************************************************************************
  *  dUpload
  *
- *  Copyright (c) 2015 by Belov Nikita <null@deltaz.org>
- *                2018-2019 by Bogomolov Danila
+ *  Copyright (c) 2020 by Bogomolov Danila
  *
  ***************************************************************************
  *                                                                         *
@@ -14,37 +13,47 @@
  ***************************************************************************
 *****************************************************************************/
 
-#include "monochrome.h"
+#include "black_and_white.h"
 #include <QPushButton>
 #include <QVBoxLayout>
 
-QString dFilterMonochrome::name() const
+QString dFilterBlackAndWhite::name() const
 {
-	return "Monochrome";
+	return "Black & White";
 }
 
-void dFilterMonochrome::setPixmap( const QPixmap &pixmap ) const
+void dFilterBlackAndWhite::setPixmap( const QPixmap &pixmap ) const
 {
 	m_original = &pixmap;
 }
 
-QWidget * dFilterMonochrome::getWidget() const
+QWidget * dFilterBlackAndWhite::getWidget() const
 {
-	QWidget *w = new QWidget();
-	QPushButton *button = new QPushButton( "Test" );
-	//button->setSizePolicy( QSizePolicy::Ignored, QSizePolicy::Ignored );
+	QWidget *w = new QWidget;
+
+	slider = new QSlider( Qt::Horizontal );
+	slider->setTickPosition( QSlider::TicksBothSides );
+	slider->setTickInterval( 15 );
+	slider->setSingleStep( 1 );
+	slider->setRange( 0, 255 );
+	slider->setValue( 127 );
+	connect(slider, &QSlider::valueChanged, this, &dFilterBlackAndWhite::applyFilter);
 
 	QVBoxLayout *layout = new QVBoxLayout;
-	layout->addWidget( button );
-	layout->addWidget( new QPushButton( "Test2" ) );
+	layout->addWidget( slider );
 
-	w->setLayout(layout);
+	w->setLayout( layout );
 
 	return w;
 }
 
-QPixmap dFilterMonochrome::applyFilter() const
+#include<QDebug>
+
+QPixmap dFilterBlackAndWhite::applyFilter() const
 {
+	int threshold = slider->value();
+	qInfo() << threshold;
+
 	QImage image = m_original->toImage();
 	for ( int i = 0; i < image.height(); i++ )
 	{
@@ -54,7 +63,14 @@ QPixmap dFilterMonochrome::applyFilter() const
 		{
 			QRgb *rgbpixel = reinterpret_cast<QRgb*>( scan + j * depth );
 			int gray = qGray( *rgbpixel );
-			*rgbpixel = QColor( gray, gray, gray ).rgba();
+			if (gray >= threshold )
+			{
+				*rgbpixel = QColor( Qt::white ).rgba();
+			}
+			else
+			{
+				*rgbpixel = QColor( Qt::black ).rgba();
+			}
 		}
 	}
 	return QPixmap::fromImage( image );

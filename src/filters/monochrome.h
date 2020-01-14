@@ -29,7 +29,9 @@ class dFilterMonochrome : public QObject, dFilterInterface
 
 public:
 	QString name() const override;
-	QPixmap applyFilter( const QPixmap &pixmap ) const override;
+	void setPixmap( const QPixmap &pixmap ) const override;
+	QPixmap applyFilter() const override;
+	QWidget * getWidget() const override;
 };
 
 #endif // DFILTERMONOCHROME_H
